@@ -1,0 +1,20 @@
+Typical values for use with final cooling simulations (6/16/2023)
+
+alpha = 0, maybe 0.5
+beta = 2.7 cm (2-3 cm, higher is better)
+momentum = 120 MeV/c (get close to 180 MeV/c)
+sigma-p = 0.6 - 1 MeV/c (might work better with lower)
+
+Point 5:
+transverse emittance: 300 microns
+longitudinal emittance: 1500 microns
+
+Point 6:
+tran. 25-30 microns
+long. 70,000 microns
+
+6D-B10 endpoint:
+trans. 145 microns
+long. 1000 microns
+
+Materials: Diamond, Boron Carbide

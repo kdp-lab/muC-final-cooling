@@ -1,0 +1,87 @@
+Stage                        x emit (μm)    y emit (μm)    z-emit (mm)    sigma-p (MeV/c)    sigma-t (ns)    Beam momentum (MeV/c)    Beam remaining
+-------------------------  -------------  -------------  -------------  -----------------  --------------  -----------------------  ----------------
+Initial distribution               144.9          145.1          1.262              1.001           0.745                    100.0            100.0%
+After first wedge                   45.9          151.4          6.319              7.179           0.745                     87.2            100.0%
+After RF cavity + 15% cut           37.7          139.5          4.401              1.304           4.041                     86.3             84.0%
+After second wedge                  44.5           50.1         29.772              8.063           4.040                     72.6             83.8%
+After 4 sigma cut                   40.1           43.9         28.649              7.787           4.038                     72.7             83.4%
+
+\begin{tabular}{lrrrrrrr}
+\hline
+ Initial distribution      & 144.9 & 145.1 &  1.262 & 1.001 & 0.745 & 100.0 & 100.0\% \\
+\hline
+ After first wedge         &  45.9 & 151.4 &  6.319 & 7.179 & 0.745 &  87.2 & 100.0\% \\
+\hline
+ \makecell[r]{After RF cavity \\+ 15\% cut} &  37.7 & 139.5 &  4.401 & 1.304 & 4.041 &  86.3 &  84.0\% \\
+\hline
+ After second wedge        &  44.5 &  50.1 & 29.772 & 8.063 & 4.040 &  72.6 &  83.8\% \\
+\hline
+ After 4 sigma cut         &  40.1 &  43.9 & 28.649 & 7.787 & 4.038 &  72.7 &  83.4\% \\
+\hline
+\end{tabular}
+
+Stage                        x emit (μm)    y emit (μm)    z-emit (mm)    sigma-p (MeV/c)    sigma-t (ns)    Beam momentum (MeV/c)    Beam remaining
+-------------------------  -------------  -------------  -------------  -----------------  --------------  -----------------------  ----------------
+Initial distribution               109.8          109.4          1.390              0.800           0.930                    100.0            100.0%
+After first wedge                   34.5          114.1          7.115              6.301           0.930                     88.9            100.0%
+After RF cavity + 15% cut           27.9          105.4          4.886              1.434           3.611                     87.9             84.0%
+After second wedge                  32.4           39.4         24.542              6.838           3.611                     77.0             83.9%
+After 4 sigma cut                   29.9           36.3         23.646              6.632           3.608                     77.1             83.6%
+
+\begin{tabular}{lrrrrrrr}
+\hline
+ Initial distribution      & 109.8 & 109.4 &  1.390 & 0.800 & 0.930 & 100.0 & 100.0\% \\
+\hline
+ After first wedge         &  34.5 & 114.1 &  7.115 & 6.301 & 0.930 &  88.9 & 100.0\% \\
+\hline
+ \makecell[r]{After RF cavity \\+ 15\% cut} &  27.9 & 105.4 &  4.886 & 1.434 & 3.611 &  87.9 &  84.0\% \\
+\hline
+ After second wedge        &  32.4 &  39.4 & 24.542 & 6.838 & 3.611 &  77.0 &  83.9\% \\
+\hline
+ After 4 sigma cut         &  29.9 &  36.3 & 23.646 & 6.632 & 3.608 &  77.1 &  83.6\% \\
+\hline
+\end{tabular}
+
+--------------------
+
+\begin{tabular}{r|rrrrrr}
+ \makecell{$\beta$ \\ m) & \makecell{$\epsilon_x$ \\ \si{\micro\meter}) & \makecell{$\epsilon_y$ \\ \si{\micro\meter}) & \makecell{$\epsilon_z$ \\ \si{\milli\meter}) & \makecell{angle \\ deg) & \makecell{length \\ m) \\
+\hline
+ 0.024 & 31.1001 & 112.885 & 6.52201 & 49.4737 & 6 \\
+ 0.027 & 31.0892 & 114.932 & 7.34587 & 50.5263 & 7 \\
+ 0.03  & 31.0425 & 115.458 & 6.72827 & 47.3684 & 6 \\
+ 0.033 & 31.2376 & 118.993 & 7.22118 & 47.3684 & 7 \\
+\hline
+\end{tabular}
+
+\begin{tabular}{r|rrrrrr}
+\makecell{$\alpha$ \\ m) & \makecell{$\epsilon_x$ \\ \si{\micro\meter}) & \makecell{$\epsilon_y$ \\ \si{\micro\meter}) & \makecell{$\epsilon_z$ \\ \si{\milli\meter}) & \makecell{angle \\ deg) & \makecell{length \\ m) \\
+\hline
+ 0.5 & 31.1115 & 118.338 & 7.13516 & 47.3684 & 7 \\
+ 0.7 & 31.1041 & 114.000 & 7.02682 & 49.4737 & 7 \\
+ 0.9 & 31.0328 & 111.803 & 6.84298 & 51.5789 & 6 \\
+ 1.1 & 31.7015 & 110.193 & 6.33757 & 51.5789 & 6 \\
+\hline
+\end{tabular}
+
+--------------------
+
+\begin{tabular}{r|rrrrrr}
+ \makecell{$\beta$ \\ (m)} & \makecell{$\epsilon_x$ \\ (\si{\micro\meter})} & \makecell{$\epsilon_y$ \\ (\si{\micro\meter})} & \makecell{$\epsilon_z$ \\ (\si{\milli\meter})} & \makecell{angle \\ (deg)} & \makecell{length \\ (m)} \\
+\hline
+ 0.024 & 31.10 & 112.9 & 6.522 & 49.4737 & 6 \\
+ 0.027 & 31.09 & 114.9 & 7.346 & 50.5263 & 7 \\
+ 0.03  & 31.04 & 115.5 & 6.728 & 47.3684 & 6 \\
+ 0.033 & 31.24 & 119.0 & 7.221 & 47.3684 & 7 \\
+\hline
+\end{tabular}
+
+\begin{tabular}{r|rrrrrr}
+ \makecell{$\alpha$ \\ (m)} & \makecell{$\epsilon_x$ \\ (\si{\micro\meter})} & \makecell{$\epsilon_y$ \\ (\si{\micro\meter})} & \makecell{$\epsilon_z$ \\ (\si{\milli\meter})} & \makecell{angle \\ (deg)} & \makecell{length \\ (m)} \\
+\hline
+ 0.5 & 31.11 & 118.3 & 7.135 & 47.3684 & 7 \\
+ 0.7 & 31.10 & 114.0 & 7.027 & 49.4737 & 7 \\
+ 0.9 & 31.03 & 111.8 & 6.843 & 51.5789 & 6 \\
+ 1.1 & 31.70 & 110.2 & 6.338 & 51.5789 & 6 \\
+\hline
+\end{tabular}

@@ -1,0 +1,15 @@
+BASE
+LENGTH
+THETA
+
+height = offset * base/length
+height > N*offset
+
+offset * base/length > N*offset
+base/length > N
+
+offset > beamwidth
+
+length / (2*tan(theta)) > beamwidth
+
+length > 2*tan(theta)*beamwidth

@@ -1,0 +1,15 @@
+Effects of variables
+(effect of an increase, such that "increase" means positive correlation and "decrease" means negative correlation)
+alpha: increases optimal angle, decreases y-emittance, extremely high or low values increase z-emittance
+
+beta: decreases optimal angle, increases y-emittance, slight optimal point for z-emittance
+momentum: increases optimal angle, increases x-emittance, decreases z-emittance, increases dispersion
+momentum standard deviation: increases x-emittance, decreases optimal angle, decreases z-emittance, decrease dispersion
+transverse emittance: increases x-emittance, decreases optimal angle, increases dispersion, increases z-emittance
+
+Recommendations:
+alpha: Increase to reduce y-emittance; stop before increase of x-emittance occurs. This happens somewhere in the 0.7-1.3 range.
+beta: 0.030 mm appears optimal. I'm still doubtful about whether this optimal point exists or is just a fluke. If it does not exist, beta should be as low as possible to reduce y-emittance.
+momentum: As low as possible (to reduce x-emittance) assuming z-emittance doesn't grow too high
+momentum spread: As low as possible (to reduce x-emittance) assuming z-emittance doesn't grow too high
+transverse emittance: As low as possible
