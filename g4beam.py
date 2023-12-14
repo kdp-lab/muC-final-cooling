@@ -366,6 +366,7 @@ def run_g4beam(df, filename, **kwargs):
     command = ["g4bl", filename, f"beamfile={in_filename}",
                f"outname=out_{ident}"] + [x + "=" + str(y) for x, y in kwargs.items()]
     try:
+        print(command)
         subprocess.run(command, stdout=subprocess.DEVNULL)
     except Exception:
         os.remove(in_filename)
@@ -380,7 +381,7 @@ def run_g4beam(df, filename, **kwargs):
     return result
 
 
-def run_distribution(df, length, half_angle, base_length=None, debug=False, filename="G4_FinalCooling_auto.g4bl",
+def run_distribution(df, length, half_angle, base_length=None, debug=False, filename="./configs/G4_FinalCooling_auto.g4bl",
                      axis=0, **kwargs):
     """Runs a given distribution. This is specific to the experiment contained in `G4_FinalCooling_auto.g4bl`
 
