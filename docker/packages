@@ -40,6 +40,7 @@ python3-devel
 python3-numpy
 python3-pip
 qt5-qtwebengine-devel
+qt5-qtbase-devel.x86_64
 rapidyaml-devel
 redhat-rpm-config
 rsync
