@@ -45,7 +45,6 @@ MUON_MASS = 105.6583755  # There's got to be a better way than this...
 # MUON_MASS = 105.65836668  # This is the rest mass that Distribution_optics.m uses
 C = 299792458
 
-
 def read_trackfile(filepath):
     """
     Reads G4Beamline output into a Pandas database
@@ -387,11 +386,14 @@ def run_g4beam(df, filename, debug=False, **kwargs):
     :param debug: If true, prints command to run rather than running G4Beamline. Also creates and leaves the required input file.
     :return: Dataframe of the results
     """
+    if not os.path.exists("temp"):
+        os.mkdir("temp")
     ident = str(time.time()).replace(".", "_")
-    in_filename = f"in_{ident}.txt"
+    in_filename = f"temp/in_{ident}.txt"
+    out_filename = f"temp/out_{ident}.txt"
     write_trackfile(df, in_filename)
-    command = ["g4bl", filename, f"beamfile={in_filename}", f"outname=out_{ident}", f"nparticles={len(df)}"] \
-              + [x + "=" + str(y) for x, y in kwargs.items()]
+    command = ["g4bl", filename, f"beamfile={in_filename}", f"outfile={out_filename}", f"nparticles={len(df)}"] + \
+              [x + "=" + str(y) for x, y in kwargs.items()]
     if debug:
         print(" ".join(command))
         return
@@ -402,11 +404,11 @@ def run_g4beam(df, filename, debug=False, **kwargs):
         raise
     os.remove(in_filename)
     try:
-        result = read_trackfile(f"out_{ident}.txt")
+        result = read_trackfile(out_filename)
     except Exception:
-        os.remove(f"out_{ident}.txt")
+        os.remove(out_filename)
         raise
-    os.remove(f"out_{ident}.txt")
+    os.remove(out_filename)
     return result
 
 
@@ -521,18 +523,18 @@ def main():
     # before = read_trackfile("for003_G4BL_JINST_120_1p4_1p0.dat")
     # print_all_params(before)
 
-    print("Test 2: Generate trackfile, verify that parameters are correct")
-    generated = gen_distribution(
-        (0.017, 0.7, 0.115, 0, 0),
-        (0.017, 0.7, 0.115, 0, 0),
-        120,
-        1,
-        z_emit=1,
-    )
-    print_all_params(generated)
-    print(len(generated))
+    # print("Test 2: Generate trackfile, verify that parameters are correct")
+    # generated = gen_distribution(
+    #     (0.017, 0.7, 0.115, 0, 0),
+    #     (0.017, 0.7, 0.115, 0, 0),
+    #     120,
+    #     1,
+    #     z_emit=1,
+    # )
+    # print_all_params(generated)
+    # print(len(generated))
     # write_trackfile(generated, filepath="particles_before.txt", comment="particles_before")
-    #
+
     # print("Test 3: Plot histograms")
     # def plot_hist(df, x_field, y_field, label=None):
     #     fig, ax = plt.subplots()
@@ -553,7 +555,7 @@ def main():
     # plot_hist(before, "x", "Px", label="Before")
     # plot_hist(before, "y", "Py", label="Before")
     # plt.show()
-    #
+
     # print("Test 4: Generate a distribution, run G4Beamline")
     # generated = gen_distribution(
     #     (0.0272, 0.407, 0.05, 0.001119, -0.00161),
@@ -562,14 +564,14 @@ def main():
     #     10,
     #     1.1875,
     # )
-    # result = run_distribution(generated)
+    # result = run_distribution(generated, length=7, half_angle=45)
     # print(result)
     # print("Statistics before:")
     # print_all_params(generated)
     # print()
     # print("Statistics after:")
     # print_all_params(result)
-    #
+
     # print("Test 5: Sweep over momentum")
     # results = list()
     # for m in trange(30, 151, 10):
@@ -586,7 +588,7 @@ def main():
     # df = pandas.DataFrame(results, columns=["momentum", "xemit", "yemit", "zemit"])
     # print(df)
     # df.to_pickle("momentum_sweep_results.pkl")
-    #
+
     # print("Test 5.1: Read the data we produced in the previous test")
     # df = pd.read_pickle("momentum_sweep_results.pkl")
     # print(df)
@@ -615,7 +617,7 @@ def main():
     # df = pandas.DataFrame(results, columns=["halfangle", "length", "xemit", "yemit", "zemit"])
     # print(df)
     # df.to_pickle("angle_sweep_results.pkl")
-    #
+
     # print("Test 6.1: Read the data we produced in the previous test")
     # df = pd.read_pickle("angle_sweep_results.pkl")
     # print(df)

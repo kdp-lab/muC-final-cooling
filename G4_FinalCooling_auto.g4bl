@@ -2,13 +2,9 @@
 
 # Created by: D. Stratakis 
 # Modified by Daniel Fu for scripted running
-# Updated: September 20, 2023
+# Updated: January 24, 2024
 
 # COLORS:  100 red, 010 green, 111 white, 110 yellow, 001 blue, 101 magenta, 011 cyan
-
-# VERSION HISTORY
-
-# v304: Creates distributions at entrance of Q20 and Q21
 
 ######################### DEFINE PHYSICS MODEL
  
@@ -39,6 +35,7 @@
 
   param -unset nparticles=12000
   param -unset beamfile=particles_before.txt
+  param -unset outfile=particles_after.txt
   beam ascii filename=$beamfile nEvents=$nparticles beamZ=0  
                                    
 ######################### DEFINE WEDGE
@@ -71,7 +68,7 @@
 ######################### DEFINE VIRTUAL SCREENS
 
   param VDRad=60.0
-  virtualdetector VD    radius=$VDRad    length=0.2  color=1,1,1 format=asciiExtended coordinates=centerline
+  virtualdetector VD radius=$VDRad length=0.2 color=1,1,1 format=asciiExtended coordinates=centerline filename=$outfile
    
 ##########################################################################################################
 ############################################  PLACE ELEMENTS  ############################################
@@ -90,7 +87,4 @@
     endif
   endif
 
-
-  param -unset outname=particles_after
-
-  place VD             front=1 rename=$outname        z=$absLEN3+1
+  place VD front=1 z=$absLEN3+1

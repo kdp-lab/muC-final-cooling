@@ -1,6 +1,7 @@
 # Ignore input and output files
 in_*.txt
 out_*.txt
+temp
 g4bl.out
 particles_before.txt
 particles_after.txt

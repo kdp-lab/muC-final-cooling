@@ -1,7 +1,7 @@
 # Simulates phase rotation RF cavity
 
-# Created by: D. Fu
-# Updated: July 6, 2023
+# Created by: Daniel Fu
+# Updated: January 24, 2024
 
 ######################### DEFINE PHYSICS MODEL
   
@@ -26,6 +26,7 @@
 
   param -unset nparticles=12000
   param -unset beamfile=drifted.txt
+  param -unset outfile=particles_after.txt
   param -unset beamZ=0
 
   beam ascii filename=$beamfile nEvents=$nparticles beamZ=$beamZ
@@ -45,7 +46,7 @@
 
 ######################### DEFINE VIRTUAL SCREENS
 
-  virtualdetector VD radius=$apertr length=0.2 color=1,1,1 format=asciiExtended coordinates=centerline
+  virtualdetector VD radius=$apertr length=0.2 color=1,1,1 format=asciiExtended coordinates=centerline filename=$outfile
 
 ######################### PLACE ELEMENTS
 
@@ -53,4 +54,4 @@
   
   place cavity front=1 z=1
   
-  place VD front=1 rename=$outname z=$RF_length+50
+  place VD front=1 z=$RF_length+50
