@@ -18,7 +18,7 @@
   start initialZ=$zbegin  y=0.000   x=0.00   z=0.00    radiusCut=300
   param steppingFormat=N,GLOBAL,CL,STEP,VOL,PROCESS,P,KE,POLAR,B
   param fieldVoxels=400,400,400 
-  param maxStep=0.5
+  param -unset maxStep=0.5
   
   param -unset minRangeCut=1
 
@@ -37,10 +37,8 @@
 
 ######################### DEFINE INPUT BEAM
 
-  param -unset nparticles=50000
-
+  param -unset nparticles=12000
   param -unset beamfile=particles_before.txt
-
   beam ascii filename=$beamfile nEvents=$nparticles beamZ=0  
                                    
 ######################### DEFINE WEDGE
@@ -78,8 +76,6 @@
 ##########################################################################################################
 ############################################  PLACE ELEMENTS  ############################################
 ##########################################################################################################
-  
-# place VD             front=1 rename=VD_Diagnostic_01         z=1.0
 
   param -unset wedgeAxis=0  # 1 (or any nonzero) indicates y axis
   param -unset noWedge=0  # 1 to completely remove the wedge
@@ -98,5 +94,3 @@
   param -unset outname=particles_after
 
   place VD             front=1 rename=$outname        z=$absLEN3+1
- 
-  # place VD             front=1 rename=particles_End          z=20.0 

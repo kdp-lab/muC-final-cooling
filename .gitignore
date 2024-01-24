@@ -1,3 +1,10 @@
+# Ignore input and output files
+in_*.txt
+out_*.txt
+g4bl.out
+particles_before.txt
+particles_after.txt
+
 # Results folder is over 40 GB so not including it
 results/
 
@@ -5,8 +12,8 @@ results/
 materials/
 
 # Not including the peer review from SULI 2023 as it's not related to this project
-publications/Daniel Fu_Peer Review.docx
-publications/Daniel Fu_Peer Review.pdf
+**/Daniel Fu_Peer Review.docx
+**/Daniel Fu_Peer Review.pdf
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,jupyternotebooks

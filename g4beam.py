@@ -153,6 +153,12 @@ def calc_all_params(df):
 
 
 def p_total(df):
+    """
+    Computes total momentum
+
+    :param df: pandas dataframe of particles
+    :return: Series representing the total momentum of the particles
+    """
     return np.sqrt(
         np.square(df["Px"]) + np.square(df["Py"]) + np.square(df["Pz"])
     )
@@ -173,7 +179,7 @@ def emittances(df):
 
 def str_params(params):
     """
-    Represents the parameters tuple in a convenient format
+    Represents the parameters tuple in a convenient format for printing
 
     :param params: Tuple of (emittance, beta, gamma, alpha, D, D') as produced by calc_params
     :return: string representation of the parameters
@@ -286,7 +292,7 @@ def gen_distribution(
 def rel_beta(p):
     """Calculates relativistic beta
 
-    :param p: momentum, in MeV/c
+    :param p: momentum, in MeV/c (can be a numpy array)
     :return: beta factor (v/c)
     """
     return np.sqrt(1 - 1 / (1 + np.square(p / MUON_MASS)))
@@ -310,6 +316,13 @@ def remove_dispersion(df):
 
 
 def z_prop(df, z):
+    """
+    Approximates the propagation of particles down a drift channel, by adding to the
+
+    :param df: initial particle distribution
+    :param z: z-coordinate that the particles will be propagated to
+    :return: distribution after drift
+    """
     betas = rel_beta(df["Pz"])
     t_diff = (z - df["z"]) / (C * betas) * 1e6
     result = df.copy(deep=True)
@@ -319,6 +332,14 @@ def z_prop(df, z):
 
 
 def df_calc(df):
+    """
+    Augments a pandas dataframe representing a particle distribution with calculated columns:
+    "P" - total momentum
+    "delta" - relative deviation from mean in total momentum
+    "b_factor" - relativistic beta factor (v/c)
+
+    :param df: the dataframe to augment
+    """
     df["P"] = np.sqrt(np.square(df["Px"]) + np.square(df["Py"]) + np.square(df["Pz"]))
     mean_total_momentum = np.mean(df["P"])
     df["delta"] = (df["P"] - mean_total_momentum) / mean_total_momentum
@@ -327,7 +348,7 @@ def df_calc(df):
 
 def max_length(half_angle, height=10):
     """
-    Calculates the maximum length allowed for a particular angle. (This is specific to `G4_FinalCooling.g4bl`)
+    Calculates the maximum length geometrically possible for a particular angle. (This is specific to `G4_FinalCooling.g4bl`)
 
     :param half_angle: the half-angle being tested
     :param height: height of the wedge (default is the default in the file)
@@ -337,7 +358,8 @@ def max_length(half_angle, height=10):
 
 
 def infer_z_std(p_mean, p_std, l_emittance):
-    """Helper method to convert from longitudinal emittance to z std
+    """
+    Helper method to convert from longitudinal emittance to z std
 
     :param p_mean: Mean momentum (MeV/c)
     :param p_std: Standard deviation of momentum (MeV/c)
@@ -348,23 +370,31 @@ def infer_z_std(p_mean, p_std, l_emittance):
     return l_emittance * MUON_MASS / (rel_beta(p_mean) * p_std)
 
 
-def run_g4beam(df, filename, **kwargs):
-    """    Runs G4Beamline with provided distribution and file.
+def run_g4beam(df, filename, debug=False, **kwargs):
+    """
+    Runs G4Beamline with provided distribution and file.
 
     This is a more generic function provided in case we want to use another setup later.
-    Assumes input distribution in `particles_before.txt` and output in `particles_after.txt`.
+    Assumes G4Beamline file takes parameters:
+    "beamfile" for the input file
+    "outname" for output file
+    "nparticles" for number of particles
     Additional parameters will be passed through to G4Beamline.
 
     :param df: The distribution to run.
     :param filename: G4Beamline file to use
     :param kwargs: Arguments to pass to file
+    :param debug: If true, prints command to run rather than running G4Beamline. Also creates and leaves the required input file.
     :return: Dataframe of the results
     """
     ident = str(time.time()).replace(".", "_")
     in_filename = f"in_{ident}.txt"
     write_trackfile(df, in_filename)
-    command = ["g4bl", filename, f"beamfile={in_filename}",
-               f"outname=out_{ident}"] + [x + "=" + str(y) for x, y in kwargs.items()]
+    command = ["g4bl", filename, f"beamfile={in_filename}", f"outname=out_{ident}", f"nparticles={len(df)}"] \
+              + [x + "=" + str(y) for x, y in kwargs.items()]
+    if debug:
+        print(" ".join(command))
+        return
     try:
         subprocess.run(command, stdout=subprocess.DEVNULL)
     except Exception:
@@ -382,7 +412,9 @@ def run_g4beam(df, filename, **kwargs):
 
 def run_distribution(df, length, half_angle, base_length=None, debug=False, filename="G4_FinalCooling_auto.g4bl",
                      axis=0, **kwargs):
-    """Runs a given distribution. This is specific to the experiment contained in `G4_FinalCooling_auto.g4bl`
+    """
+    Runs a given distribution through the wedge.
+    This function is specific to the experiment contained in `G4_FinalCooling_auto.g4bl`
 
     If a height of N times offset is desired, use base length at least N*length
 
@@ -404,7 +436,6 @@ def run_distribution(df, length, half_angle, base_length=None, debug=False, file
         abshgt=str(offset * base_length / length + 0.1),
         absLEN3=str(base_length),
         wedgeAxis=axis,
-        nparticles=len(df),
         **kwargs
     )
     if debug:
@@ -604,10 +635,10 @@ def main():
     # print(emittances(run_distribution(before, 12, 45)))
 
     # Some variables for future tests
-    BETA = .03  # centimeter to meter conversion!
-    ALPHA = 0
-    T_EMIT = 0.145
-    L_EMIT = 1
+    # BETA = .03  # centimeter to meter conversion!
+    # ALPHA = 0
+    # T_EMIT = 0.145
+    # L_EMIT = 1
 
     # print("Test 7.1: Generate up a test case")
     # before = gen_distribution((BETA, ALPHA, T_EMIT, 0, 0), (BETA, ALPHA, T_EMIT, 0, 0), 180, 1, z_emit=L_EMIT)

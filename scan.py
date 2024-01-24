@@ -17,6 +17,15 @@ def beep():
 
 
 def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
+    """
+
+    :param fun: The function to be run
+    :param var_axes:
+    :param filename: .pkl file to save the results to after the scan finishes. Optional.
+    :param trials: Number of repeated trials to run for each variable combination. Optional.
+    :param beep_on_done: Whether to beep when the scan finishes
+    :return:
+    """
     to_run = list(itertools.product(*var_axes)) * trials
     results = list()
     for x in tqdm(to_run):
