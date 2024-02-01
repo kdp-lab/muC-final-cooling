@@ -1,7 +1,13 @@
+'''
+Author: Anthony Badea
+Date: 02/01/2024
+'''
+
 from g4beam import *
 from scan import *
 import time
 
+# list of parameters to optimize
 params = {
     't_emit': 0.145, # mm
     'momentum': 100, # MeV/c
@@ -21,6 +27,10 @@ params = {
     'rf_grad': 4.046563465382562
 }
 
+# target function to optimize
+# x_emit, y_emit, z_emit = emittances(cut_outliers(run_distribution(pre_w1, params["w1_length"], params["w1_angle"], params["vd_dist"], axis=0)))
+
+# example of full run through
 start = time.time()
 # Run best case
 pre_w1 = gen_distribution(
