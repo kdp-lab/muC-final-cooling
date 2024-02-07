@@ -6,6 +6,30 @@ Date: 02/01/2024
 from g4beam import *
 from scan import *
 import time
+from skopt import gp_minimize
+import numpy as np
+
+def f(x):
+    params = {
+        't_emit': 0.145, # mm
+        'momentum': 100, # MeV/c
+        'beta': 0.03, # m
+        'alpha': 1, # dimensionless
+        'l_emit': 1, # mm
+        'pz_std': 1, # MeV/c
+        'vd_dist': 24, # mm
+        'w1_length': x[0],
+        'w1_angle': x[1],
+        'w2_length': 6.724887901827298,
+        'w2_angle': 42.245718529695516,
+        'drift_length': 16000,
+        'rf_freq': 0.025,
+        'rf_phase': 0.001987066319906211,
+        'rf_length': 5153.756925848655,
+        'rf_grad': 4.046563465382562
+    }
+    x,y,z = run(params)
+    return z
 
 def run(params):
     # Run best case
@@ -47,15 +71,16 @@ def run(params):
     print_all_params(post_w2_cut)
 
     # get distributions
-    emits = {}
-    SAMPLE_DISTS = [pre_w1, post_correct, pre_w2, post_w2, post_w2_cut]
-    SAMPLE_TITLES = ["Initial distribution", "After first wedge", "After RF cavity + 15% cut", "After second wedge", "After 4 sigma cut"]
-    for sample, dist in zip(SAMPLE_TITLES, SAMPLE_DISTS):
-        x_emit, y_emit, z_emit = emittances(cut_outliers(run_distribution(dist, params["w1_length"], params["w1_angle"], params["vd_dist"], axis=0)))
-        print(f"{sample}: ", x_emit, y_emit, z_emit)
-        emits[sample] = [x_emit, y_emit, z_emit]
+    # emits = {}
+    # SAMPLE_DISTS = [pre_w1, post_correct, pre_w2, post_w2, post_w2_cut]
+    # SAMPLE_TITLES = ["Initial distribution", "After first wedge", "After RF cavity + 15% cut", "After second wedge", "After 4 sigma cut"]
+    # for sample, dist in zip(SAMPLE_TITLES, SAMPLE_DISTS):
+    #     x_emit, y_emit, z_emit = emittances(cut_outliers(run_distribution(dist, params["w1_length"], params["w1_angle"], params["vd_dist"], axis=0)))
+    #     print(f"{sample}: ", x_emit, y_emit, z_emit)
+    #     emits[sample] = [x_emit, y_emit, z_emit]
+    # return emits
 
-    return emits
+    return emittances(cut_outliers(run_distribution(post_w2_cut, params["w1_length"], params["w1_angle"], params["vd_dist"], axis=0)))
 
 if __name__ == "__main__":
     # list of parameters to optimize
@@ -80,8 +105,22 @@ if __name__ == "__main__":
     
     
     # example of full run through
-    start = time.time()
-    emits = run(params)
-    print(f"Time elapsed: {time.time() - start:.1f}")
-    print(emits)
+    # start = time.time()
+    # emits = run(params)
+    # print(f"Time elapsed: {time.time() - start:.1f}")
+    # print(emits)
+    np.int = int
+    res = gp_minimize(f,                  # the function to minimize
+                      [
+                        (1, 10),          # bounds on 1st wedge length
+                        (30, 70)          # bounds on 1st wedge angle
+                      ],
+                      x0=[7.5, 45],       # starting values
+                      acq_func="EI",      # the acquisition function
+                      n_calls=15,         # the number of evaluations of f
+                      n_random_starts=5,  # the number of random initialization points
+                      # noise=0.1**2,       # the noise level (optional)
+                      random_state=1234)   # the random seed
     
+    print("x^*=%.4f, f(x^*)=%.4f" % (res.x[0], res.fun))
+    print(res)
