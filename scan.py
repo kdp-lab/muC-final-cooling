@@ -36,14 +36,12 @@ def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
         result = fun(*x)
         results.append(tuple(list(x) + [result]))
     if filename is not None:
-        if filename.endswith(".pkl"):
-            with open(filename, "wb+") as file:
-                pickle.dump(results, file)
-        elif filename.endswith(".lzma"):
-            with lzma.open(filename, "wb+") as file:
+        if filename.endswith(".lzma"):
+            # Save with pkl + lzma
+            with lzma.open(filename, "wb") as file:
                 pickle.dump(results, file)
         else:
-            # Unrecognized filename, default to pickle
+            # Assume a pickle file
             with open(filename, "wb+") as file:
                 pickle.dump(results, file)
     if beep_on_done:
