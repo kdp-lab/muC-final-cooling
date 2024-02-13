@@ -7,7 +7,10 @@ particles_before.txt
 particles_after.txt
 
 # Results folder is over 40 GB so not including it
-results/
+results/*
+
+# Include the parameter sets
+!results/parameters/
 
 # materials is for templates and examples, not including it
 materials/
