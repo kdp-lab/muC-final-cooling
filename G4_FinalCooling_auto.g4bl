@@ -15,6 +15,7 @@
   param steppingFormat=N,GLOBAL,CL,STEP,VOL,PROCESS,P,KE,POLAR,B
   param fieldVoxels=400,400,400 
   param -unset maxStep=0.5
+  param -unset maxStepInWedge=0.1
   
   param -unset minRangeCut=1
 
@@ -53,13 +54,13 @@
   
   param wedge_z=0.5*$absLEN3
      
-  extrusion LHextrDS3 color=1,0,1 material=Diamond1 length=$abswidth maxStep=0.1\
+  extrusion LHextrDS3 color=1,0,1 material=Diamond1 length=$abswidth maxStep=$maxStepInWedge\
   vertices='0,0; \
                  -$absLEN3/2,$absLEN3/2/tan($abshalfangle3*$degrad); \
                  -$absLEN3/2,$abshgt; \
                  0,$abshgt'
 
-  extrusion LHextrUS3 color=1,0,1 material=Diamond1 length=$abswidth maxStep=0.1\
+  extrusion LHextrUS3 color=1,0,1 material=Diamond1 length=$abswidth maxStep=$maxStepInWedge\
   vertices='0,0; \
                   0,$abshgt; \
                   $absLEN3/2,$abshgt; \

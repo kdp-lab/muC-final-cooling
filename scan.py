@@ -42,6 +42,7 @@ def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
         result = fun(*x)
         results.append(tuple(list(x) + [result]))
     if filename is not None:
+        print("Saving to " + filename)
         if filename.endswith(".lzma"):
             # Save with pkl + lzma
             with lzma.open(filename, "wb") as file:
@@ -50,6 +51,7 @@ def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
             # Assume a pickle file
             with open(filename, "wb+") as file:
                 pickle.dump(results, file)
+        print("Results saved")
     if beep_on_done:
         beep()
     return results
@@ -72,18 +74,35 @@ def data_to_map(data):
     return result
 
 
-def calc_quantity(fun, data):
+def map_dict(fun, data):
+    """
+    Applies a function to every element in every array in an array of dicts. Essentially `map`
+    
+    Used for computing intermediate quantities such as emittances.
+
+    :param fun: The function to apply
+    :param data: The dict to apply it to
+    """
+    result = dict()
+    for k in data:
+        result[k] = list(map(fun, data[k]))
+    return result
+
+
+def calc_quantity(fun, data, is_map=False):
     """
     Computes a quantity based on scan data
 
     :param fun: Function representing the quantity to be calculated. Should take a trackfile dataframe and return the quantity
     :param data: Results in the format of results from `run_scan`
+    :param is_map: True if the data is already in a mapped format. Defaults to false
     :return: A dict mapping tuples of variable values to the mean and standard deviation of the quantity
     """
-    mapped = data_to_map(data)
+    if not is_map:
+        data = data_to_map(data)
     result = dict()
-    for k in mapped:
-        values = [fun(r) for r in mapped[k]]
+    for k in data:
+        values = [fun(r) for r in data[k]]
         result[k] = np.mean(values), np.std(values)
     return result
 

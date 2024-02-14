@@ -3,6 +3,7 @@ in_*.txt
 out_*.txt
 temp
 g4bl.out
+output.txt
 particles_before.txt
 particles_after.txt
 
