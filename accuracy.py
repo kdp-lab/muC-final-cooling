@@ -23,7 +23,7 @@ PARAMS = [
     "w1_angle",
     "w2_length",
     "w2_angle",
-    "drift_length",git 
+    "drift_length",
     "rf_freq",
     "rf_phase",
     "rf_length",
