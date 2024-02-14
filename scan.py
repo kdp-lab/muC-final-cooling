@@ -4,7 +4,12 @@ import pickle
 
 import pandas
 import scipy
-import winsound
+
+try:
+    import winsound
+    HAS_SOUND = True
+except ImportError:
+    HAS_SOUND = False
 
 import numpy as np
 from tqdm import tqdm
@@ -12,9 +17,10 @@ from tqdm import tqdm
 
 def beep():
     """Produces a pleasing beep"""
-    for x in range(3):
-        winsound.Beep(2000 + 100 * x, 100)
-    winsound.Beep(2300, 700)
+    if HAS_SOUND:
+        for x in range(3):
+            winsound.Beep(2000 + 100 * x, 100)
+        winsound.Beep(2300, 700)
 
 
 def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
