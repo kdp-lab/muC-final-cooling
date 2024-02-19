@@ -41,7 +41,7 @@ def load_params(filename):
 particleCountRange = np.geomspace(1e4, 1e6, 10).astype(int)
 maxStepRange = np.geomspace(0.01, 10, 10)
 wedgeStepRange = np.geomspace(0.01, 10, 10)
-particleCountOptimRange = np.geomspace(1e4, 1e5, 10).astype(int)
+particleCountOptimRange = np.geomspace(1e3, 1e5, 10).astype(int)
 
 
 if __name__ == "__main__":
@@ -89,5 +89,5 @@ if __name__ == "__main__":
             length, angle = x
             return emittances(cut_outliers(run_distribution(pre_w1, length, angle, vd_dist, axis=0, maxStep=1)))[0]
         res = scipy.optimize.minimize(goal_fun, [7.5, 45], method="Nelder-Mead", bounds=((1, 10), (30, 70)))
-        return res.x[0], res.x[1], res.fun, time.time()-start_time
+        return res, time.time()-start_time
     results = run_scan(fun, (particleCountOptimRange,), "results/accuracy_optim_particleCount.pkl.lzma", trials=30)
