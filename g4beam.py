@@ -217,7 +217,7 @@ def print_all_params(df):
 
 
 def gen_distribution(
-        x_params, y_params, p_mean, p_std, z_std=None, z_emit=None, N=12000, seed=None
+        x_params, y_params, p_mean, p_std, z_std=None, z_emit=None, N=12000, particle_id=-13, seed=None
 ):
     """Generates a distribution with given parameters, using formulas in this link:
     https://nicadd.niu.edu/~syphers/tutorials/analyzeTrack.html#creating-a-distribution
@@ -236,6 +236,7 @@ def gen_distribution(
     :param z_std: The standard deviation of z location. Leave as None to infer
     :param z_emit: Emittance in z. Required if z_std is not given.
     :param N: Number of events to generate
+    :param particle_id: PDGid of the particles to generate. Default is -13 representing a positive muon
     :param seed: Seed for the RNG (leave as None for random seed)
     """
     # Seed the RNG
@@ -279,7 +280,7 @@ def gen_distribution(
     result["Py"] = yp * p
     result["Pz"] = zp * p
     result["t"] = t
-    result["PDGid"] = 13
+    result["PDGid"] = particle_id
     result["EventID"] = np.arange(1, N + 1)
     result["TrackID"] = 1
     result["ParentID"] = 0
