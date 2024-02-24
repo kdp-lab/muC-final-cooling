@@ -13,7 +13,7 @@ except ImportError:
 
 import numpy as np
 from tqdm import tqdm
-from multiprocess import Pool
+from multiprocessing import Pool
 
 
 def beep():
@@ -42,8 +42,7 @@ def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_don
     results = list()
     if processes:
         def run_func(x):
-            result = fun(*x)
-            return tuple(list(x) + [result])
+            return tuple(list(x) + [fun(*x)])
         with Pool(processes) as p:
             results = list(tqdm(p.imap_unordered(run_func, to_run), total=len(to_run)))
     else:
