@@ -34,7 +34,21 @@ class RunWrapper:
         return tuple(list(x) + [self.f(*x)])
 
 
-def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_done=True):
+class ScanResult:
+    """
+    Represents the results of a scan. Essentially a wrapper around a pandas DataFrame with the scan range information
+    included
+    """
+
+    def __init__(self, results, var_ranges, var_names):
+        if var_names is None:
+            var_names = ["x" + str(i+1) for i in range(len(var_ranges))]
+        self.data = pandas.DataFrame(data=results, columns=var_names + ["result"])
+        self.var_ranges = var_ranges
+        self.var_names = var_names
+
+
+def run_scan(fun, var_ranges, var_names=None, filename=None, trials=1, processes=None, beep_on_done=True):
     """
     Runs a scan over variables of a given simulation. This is intended to generate raw (trackfile) outputs that are
     then processed with the other functions; `fun` will usually take simulation parameters and return a Pandas database
@@ -45,14 +59,15 @@ def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_don
     parameters.
 
     :param fun: The function to be run
-    :param var_axes: Tuple of arrays of values for each variable altered. These should correspond to the inputs of `fun`
+    :param var_ranges: Tuple of arrays of values for each variable altered. These should correspond to the inputs of `fun`
+    :param var_names: Names of the variables. Used as column names when a pandas database is created. Optional.
     :param filename: .pkl file to save the results to after the scan finishes. Optional. Providing a filename ending in .lzma will apply LZMA compression.
     :param trials: Number of repeated trials to run for each variable combination. Optional.
     :param processes: Number of processes to use for parallelization. Optional; if not set, does not parallelize.
     :param beep_on_done: Whether to beep when the scan finishes
     :return: List of tuples, each one consisting of the values associated with a result, followed by the result
     """
-    to_run = list(itertools.product(*var_axes)) * trials
+    to_run = list(itertools.product(*var_ranges)) * trials
     results = list()
     if processes:
         run_func = RunWrapper(fun)
@@ -62,6 +77,7 @@ def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_don
         for x in tqdm(to_run):
             result = fun(*x)
             results.append(tuple(list(x) + [result]))
+    results = ScanResult(results, var_ranges, var_names)
     if filename is not None:
         print("Saving to " + filename)
         if filename.endswith(".lzma"):
@@ -98,7 +114,7 @@ def data_to_map(data):
 def map_dict(fun, data):
     """
     Applies a function to every element in every array in an array of dicts. Essentially `map`
-    
+
     Used for computing intermediate quantities such as emittances.
 
     :param fun: The function to apply
