@@ -7,6 +7,7 @@ import scipy
 
 try:
     import winsound
+
     HAS_SOUND = True
 except ImportError:
     HAS_SOUND = False
@@ -24,11 +25,25 @@ def beep():
         winsound.Beep(2300, 700)
 
 
+class RunWrapper:
+    """Wrapper object for multiprocessing"""
+
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, x):
+        return tuple(list(x) + [self.f(*x)])
+
+
 def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_done=True):
     """
     Runs a scan over variables of a given simulation. This is intended to generate raw (trackfile) outputs that are
     then processed with the other functions; `fun` will usually take simulation parameters and return a Pandas database
     of a trackfile.
+
+    If parameter `processes` is provided, will run in parallel with multiprocessing. `fun` has to be a top-level
+    function for this to work; local functions will cause an error. `functools.partial` can be used to provide partial
+    parameters.
 
     :param fun: The function to be run
     :param var_axes: Tuple of arrays of values for each variable altered. These should correspond to the inputs of `fun`
@@ -41,8 +56,7 @@ def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_don
     to_run = list(itertools.product(*var_axes)) * trials
     results = list()
     if processes:
-        def run_func(x):
-            return tuple(list(x) + [fun(*x)])
+        run_func = RunWrapper(fun)
         with Pool(processes) as p:
             results = list(tqdm(p.imap_unordered(run_func, to_run), total=len(to_run)))
     else:
