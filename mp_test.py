@@ -16,5 +16,5 @@ if __name__ == '__main__':
     test_y = 5
     test_func = partial(f, y=test_y)
     start = time()
-    print(scan.run_scan(test_func, (test,), processes=4).data)
+    print(scan.run_scan(test_func, (test,), processes=4))
     print(time() - start)

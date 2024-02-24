@@ -8,6 +8,7 @@ from matplotlib import cm
 import numpy as np
 import pandas as pd
 from tqdm import *
+import random
 
 # The fields expected in the track files
 FIELDS = [
@@ -389,7 +390,7 @@ def run_g4beam(df, filename, debug=False, **kwargs):
     """
     if not os.path.exists("temp"):
         os.mkdir("temp")
-    ident = str(time.time()).replace(".", "_")
+    ident = str(time.time()).replace(".", "_") + "_" + str(random.randrange(256))
     in_filename = f"temp/in_{ident}.txt"
     out_filename = f"temp/out_{ident}.txt"
     write_trackfile(df, in_filename)
