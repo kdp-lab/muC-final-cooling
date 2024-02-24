@@ -7,7 +7,6 @@ import scipy
 
 try:
     import winsound
-
     HAS_SOUND = True
 except ImportError:
     HAS_SOUND = False
