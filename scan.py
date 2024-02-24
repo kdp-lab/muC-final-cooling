@@ -13,6 +13,7 @@ except ImportError:
 
 import numpy as np
 from tqdm import tqdm
+from multiprocess import Pool
 
 
 def beep():
@@ -23,7 +24,7 @@ def beep():
         winsound.Beep(2300, 700)
 
 
-def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
+def run_scan(fun, var_axes, filename=None, trials=1, processes=None, beep_on_done=True):
     """
     Runs a scan over variables of a given simulation. This is intended to generate raw (trackfile) outputs that are
     then processed with the other functions; `fun` will usually take simulation parameters and return a Pandas database
@@ -33,14 +34,22 @@ def run_scan(fun, var_axes, filename=None, trials=1, beep_on_done=True):
     :param var_axes: Tuple of arrays of values for each variable altered. These should correspond to the inputs of `fun`
     :param filename: .pkl file to save the results to after the scan finishes. Optional. Providing a filename ending in .lzma will apply LZMA compression.
     :param trials: Number of repeated trials to run for each variable combination. Optional.
+    :param processes: Number of processes to use for parallelization. Optional; if not set, does not parallelize.
     :param beep_on_done: Whether to beep when the scan finishes
     :return: List of tuples, each one consisting of the values associated with a result, followed by the result
     """
     to_run = list(itertools.product(*var_axes)) * trials
     results = list()
-    for x in tqdm(to_run):
-        result = fun(*x)
-        results.append(tuple(list(x) + [result]))
+    if processes:
+        def run_func(x):
+            result = fun(*x)
+            return tuple(list(x) + [result])
+        with Pool(processes) as p:
+            results = list(tqdm(p.imap_unordered(run_func, to_run), total=len(to_run)))
+    else:
+        for x in tqdm(to_run):
+            result = fun(*x)
+            results.append(tuple(list(x) + [result]))
     if filename is not None:
         print("Saving to " + filename)
         if filename.endswith(".lzma"):
