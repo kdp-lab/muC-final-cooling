@@ -311,3 +311,6 @@ pyrightconfig.json
 
 # Docker/Singularity
 *.sif
+
+# DS store
+.DS_Store
