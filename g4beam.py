@@ -390,9 +390,12 @@ def run_g4beam(df, filename, debug=False, **kwargs):
     """
     if not os.path.exists("temp"):
         os.mkdir("temp")
+    if not os.path.exists("logs"):
+        os.mkdir("logs")
     ident = str(time.time()).replace(".", "_") + "_" + str(random.randrange(256))
     in_filename = f"temp/in_{ident}.txt"
     out_filename = f"temp/out_{ident}.txt"
+    log_filename = f"logs/log_{ident}.txt"
     write_trackfile(df, in_filename)
     command = ["g4bl", filename, f"beamfile={in_filename}", f"outfile={out_filename}", f"nparticles={len(df)}"] + \
               [x + "=" + str(y) for x, y in kwargs.items()]
@@ -400,7 +403,8 @@ def run_g4beam(df, filename, debug=False, **kwargs):
         print(" ".join(command))
         return
     try:
-        subprocess.run(command, stdout=subprocess.DEVNULL)
+        with open(log_filename, "w+") as file:
+            subprocess.run(command, stdout=file)
     except Exception:
         os.remove(in_filename)
         raise
