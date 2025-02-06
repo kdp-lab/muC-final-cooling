@@ -69,7 +69,8 @@
 ######################### DEFINE VIRTUAL SCREENS
 
   param VDRad=60.0
-  virtualdetector VD radius=$VDRad length=0.2 color=1,1,1 format=asciiExtended coordinates=centerline filename=$outfile
+
+  virtualdetector VD radius=$VDRad length=0.2 color=1,1,1 format=asciiExtended coordinates=centerline filename=$outfile kill=1
    
 ##########################################################################################################
 ############################################  PLACE ELEMENTS  ############################################
