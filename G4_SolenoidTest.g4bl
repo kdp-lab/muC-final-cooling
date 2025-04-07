@@ -1,7 +1,7 @@
-# Test for quadrupoles
+# Test for solenoid
 
 # Created by: Daniel Fu
-# Updated: February 5, 2025
+# Updated: March 25, 2025
 
 # COLORS:  100 red, 010 green, 111 white, 110 yellow, 001 blue, 101 magenta, 011 cyan
 
@@ -11,8 +11,7 @@ param zbegin=0.0
 start initialZ=$zbegin  y=0.000   x=0.00   z=0.00    radiusCut=120
 param steppingFormat=N,GLOBAL,CL,STEP,VOL,PROCESS,P,KE,POLAR,B
 param fieldVoxels=400,400,400 
-param -unset maxStep=0.5
-param -unset maxStepInWedge=0.1
+param -unset maxStep=0.01
 
 param -unset minRangeCut=1
 
@@ -32,28 +31,28 @@ particlecolor e-=1,0.5,0    # orange
 ######################### DEFINE INPUT BEAM
 
 param -unset nparticles=50000
-param -unset beamfile=quadtest_particles_before.txt
-param -unset outfile=particles_after.txt
-beam ascii filename=$beamfile nEvents=$nparticles beamZ=0  
+param -unset beamfile=solenoid_particles_before.txt
+param -unset outfile=solenoid_particles_after
+beam ascii filename=$beamfile nEvents=$nparticles beamZ=0
 
-######################### DEFINE QUAD
+######################### DEFINE SOLENOIDS
 
-param -unset fodo_grad=5.932
+param -unset s_length=105.9
+param -unset s_radius=50
+param -unset s_thickness=175
+param -unset s_current=90
+param -unset start_offset=150
 
-genericquad QF1 fieldLength=75.0 ironLength=75.0 ironRadius=120.0 apertureRadius=100.0 gradient=$fodo_grad ironColor=0,1,0
-genericquad QD1 fieldLength=75.0 ironLength=75.0 ironRadius=120.0 apertureRadius=100.0 gradient=-1*$fodo_grad ironColor=1,0,0
+coil S1_coil innerRadius=$s_radius outerRadius=$s_radius+$s_thickness length=$s_length
+solenoid S1 coilName=S1_coil current=$s_current
 
 ##########################################################################################################
 ############################################  PLACE ELEMENTS  ############################################
 ##########################################################################################################
 
-place QF1 z=-75 front=1
-for i 0 1 2 3 4
-    # zntuple z=$i*1100 filename=$outfile-b$i.txt
-    place QF1 z=$i*1100 front=1
-    place QD1 z=475+$i*1100 front=1
-    place QD1 z=550+$i*1100 front=1
-    place QF1 z=1025+$i*1100 front=1
+place S1 z=$start_offset front=1
+zntuple z=0 filename=$outfile-s.txt
+for i 0 1 2 3 4 5 6 7 8 9 10
+    zntuple z=$start_offset+$i*$s_length/10 filename=$outfile-$i.txt
 endfor
-place QF1 z=5*1100 front=1
-zntuple z=5*1100 filename=$outfile
+zntuple z=$start_offset*2+$s_length filename=$outfile-f.txt

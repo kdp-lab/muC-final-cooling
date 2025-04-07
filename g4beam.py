@@ -371,7 +371,7 @@ def infer_z_std(p_mean, p_std, l_emittance):
     return l_emittance * MUON_MASS / (rel_beta(p_mean) * p_std)
 
 
-def run_g4beam(df, filename, debug=False, **kwargs):
+def run_g4beam(df, filename, multioutput = None, debug = False, logging = False, **kwargs):
     """
     Runs G4Beamline with provided distribution and file.
 
@@ -380,12 +380,19 @@ def run_g4beam(df, filename, debug=False, **kwargs):
     "beamfile" for the input file
     "outname" for output file
     "nparticles" for number of particles
+
+    If "multioutput" is set, collects multiple output files, using suffixes listed in multioutput.
+    In this case, a list of dataframes is returned.
+    This mode assumes G4Beamline file takes parameter "outname" as a prefix, adding a suffix separated by dash and the .txt extension
+    
     Additional parameters will be passed through to G4Beamline.
 
     :param df: The distribution to run.
     :param filename: G4Beamline file to use
     :param kwargs: Arguments to pass to file
-    :param debug: If true, prints command to run rather than running G4Beamline. Also creates and leaves the required input file.
+    :param multioutput: Used for multi-output mode, list of suffixes to read from
+    :param debug: If true, prints command to run rather than running G4Beamline. Also creates and leaves the input file
+    :param logging: If true, prints console output to a file in the logs folder
     :return: Dataframe of the results
     """
     if not os.path.exists("temp"):
@@ -394,7 +401,7 @@ def run_g4beam(df, filename, debug=False, **kwargs):
         os.mkdir("logs")
     ident = str(time.time()).replace(".", "_") + "_" + str(random.randrange(256))
     in_filename = f"temp/in_{ident}.txt"
-    out_filename = f"temp/out_{ident}.txt"
+    out_filename = f"temp/out_{ident}.txt" if multioutput is None else f"temp/out_{ident}"
     log_filename = f"logs/log_{ident}.txt"
     write_trackfile(df, in_filename)
     command = ["g4bl", filename, f"beamfile={in_filename}", f"outfile={out_filename}", f"nparticles={len(df)}"] + \
@@ -403,18 +410,28 @@ def run_g4beam(df, filename, debug=False, **kwargs):
         print(" ".join(command))
         return
     try:
-        with open(log_filename, "w+") as file:
-            subprocess.run(command, stdout=file)
+        if logging:
+            with open(log_filename, "w+") as file:
+                subprocess.run(command, stdout=file)
+        else:
+            subprocess.run(command, stdout=subprocess.DEVNULL)
     except Exception:
         os.remove(in_filename)
         raise
     os.remove(in_filename)
-    try:
-        result = read_trackfile(out_filename)
-    except Exception:
+    if multioutput is not None:
+        out_filenames = [f"{out_filename}-{x}.txt" for x in multioutput]
+        # Unsure if there should be a try/except block here, or if the other one is even working
+        result = [read_trackfile(f) for f in out_filenames]
+        for f in out_filenames:
+            os.remove(f)
+    else:
+        try:
+            result = read_trackfile(out_filename)
+        except Exception:
+            os.remove(out_filename)
+            raise
         os.remove(out_filename)
-        raise
-    os.remove(out_filename)
     return result
 
 

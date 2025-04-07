@@ -1,0 +1,91 @@
+
+TITLE, 'for_optimization.madx';
+
+! Define sequence
+FODO_SEQ: sequence, l=16;
+    QF1: Quadrupole, K1=20, L=0.15, AT=0.075;
+    QD1: Quadrupole, K1=-20, L=0.15, AT=0.7416666666666666;
+    MKR0: Marker, AT=1.3333333333333333;
+    QF2: Quadrupole, K1=20, L=0.15, AT=1.4083333333333332;
+    QD2: Quadrupole, K1=-20, L=0.15, AT=2.0749999999999997;
+    MKR1: Marker, AT=2.6666666666666665;
+    QF3: Quadrupole, K1=20, L=0.15, AT=2.7416666666666667;
+    QD3: Quadrupole, K1=-20, L=0.15, AT=3.408333333333333;
+    MKR2: Marker, AT=4.0;
+    QF4: Quadrupole, K1=20, L=0.15, AT=4.075;
+    QD4: Quadrupole, K1=-20, L=0.15, AT=4.741666666666667;
+    MKR3: Marker, AT=5.333333333333333;
+    QF5: Quadrupole, K1=20, L=0.15, AT=5.408333333333333;
+    QD5: Quadrupole, K1=-20, L=0.15, AT=6.075;
+    MKR4: Marker, AT=6.666666666666666;
+    QF6: Quadrupole, K1=20, L=0.15, AT=6.741666666666666;
+    QD6: Quadrupole, K1=-20, L=0.15, AT=7.408333333333333;
+    MKR5: Marker, AT=8.0;
+    QF7: Quadrupole, K1=20, L=0.15, AT=8.075;
+    QD7: Quadrupole, K1=-20, L=0.15, AT=8.741666666666665;
+    MKR6: Marker, AT=9.333333333333332;
+    QF8: Quadrupole, K1=20, L=0.15, AT=9.408333333333331;
+    QD8: Quadrupole, K1=-20, L=0.15, AT=10.074999999999998;
+    MKR7: Marker, AT=10.666666666666666;
+    QF9: Quadrupole, K1=20, L=0.15, AT=10.741666666666665;
+    QD9: Quadrupole, K1=-20, L=0.15, AT=11.408333333333331;
+    MKR8: Marker, AT=12.0;
+    QF10: Quadrupole, K1=20, L=0.15, AT=12.075;
+    QD10: Quadrupole, K1=-20, L=0.15, AT=12.741666666666665;
+    MKR9: Marker, AT=13.333333333333332;
+    QF11: Quadrupole, K1=20, L=0.15, AT=13.408333333333331;
+    QD11: Quadrupole, K1=-20, L=0.15, AT=14.074999999999998;
+    MKR10: Marker, AT=14.666666666666666;
+    QF12: Quadrupole, K1=20, L=0.15, AT=14.741666666666665;
+    QD12: Quadrupole, K1=-20, L=0.15, AT=15.408333333333331;
+    MKR: Marker, at=16;
+endsequence;
+
+! Define beam
+BEAM, particle=POSMUON;
+
+! Use sequence
+USE, sequence=FODO_SEQ;
+
+MATCH, sequence=FODO_SEQ,
+    BETX=0.05, BETY=0.03;
+    vary, name=QF1->K1, step=.00001;
+    vary, name=QD1->K1, step=0.00001;
+    vary, name=QF2->K1, step=.00001;
+    vary, name=QD2->K1, step=0.00001;
+    vary, name=QF3->K1, step=.00001;
+    vary, name=QD3->K1, step=0.00001;
+    vary, name=QF4->K1, step=.00001;
+    vary, name=QD4->K1, step=0.00001;
+    vary, name=QF5->K1, step=.00001;
+    vary, name=QD5->K1, step=0.00001;
+    vary, name=QF6->K1, step=.00001;
+    vary, name=QD6->K1, step=0.00001;
+    vary, name=QF7->K1, step=.00001;
+    vary, name=QD7->K1, step=0.00001;
+    vary, name=QF8->K1, step=.00001;
+    vary, name=QD8->K1, step=0.00001;
+    vary, name=QF9->K1, step=.00001;
+    vary, name=QD9->K1, step=0.00001;
+    vary, name=QF10->K1, step=.00001;
+    vary, name=QD10->K1, step=0.00001;
+    vary, name=QF11->K1, step=.00001;
+    vary, name=QD11->K1, step=0.00001;
+    vary, name=QF12->K1, step=.00001;
+    vary, name=QD12->K1, step=0.00001;
+    constraint, sequence=FODO_SEQ, range=MKR1, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR2, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR3, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR4, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR5, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR6, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR7, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR8, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=MKR9, BETX<7.0013884663581845, BETY<7.009565013636893;
+    constraint, sequence=FODO_SEQ, range=mkr, BETX=0.05, BETY=0.03;
+    JACOBIAN, calls=20000, tolerance=1E-3;
+ENDMATCH;
+
+twiss, file=for_optimization.tfs, BETX=0.05, BETY=0.03;
+
+STOP;

@@ -1,0 +1,22 @@
+BEAM, particle=POSMUON;
+b_start: beta0, betx=1, bety=1;
+
+l_1=0.3;
+ks_1=50;
+testseq: sequence, l=1.1;
+    S1: Solenoid, L=l_1, KS=ks_1, AT=l_1*0.5;
+    ! S2: Solenoid, L=l_1, KS=ks_1, AT=l_1*1.5;
+    MD: Marker, AT=l_1;
+endsequence;
+
+use, sequence=testseq;
+MATCH, sequence=testseq;
+vary, name=l_1, step=.00001;
+vary, name=ks_1, step=.00001;
+constraint, range=MD, BETX=1.8;
+! constraint, range=MF0, BETX=1.8, BETY=0.4;
+simplex, calls=1000,  tolerance=1E-13;
+ENDMATCH;
+select,flag=twiss,clear;
+select,flag=twiss;
+twiss,file="test.tfs", beta0=b_start;

@@ -6,8 +6,12 @@ g4bl.out
 output.txt
 particles_before.txt
 particles_after.txt
+particles_after*.txt
 test_particles_before.txt
+*particles_before.txt
 logs
+*.dat
+madx/*.tfs
 
 # Results folder is over 40 GB so not including it
 results/*

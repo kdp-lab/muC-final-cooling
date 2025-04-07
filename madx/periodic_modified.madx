@@ -1,0 +1,29 @@
+BEAM, particle=POSMUON;
+b_start: beta0, betx=0.0462, bety=0.0262;
+
+!Starting guess from Ryan
+k_q1= 20;
+! k_qf1= 20;
+! k_qd1=-20;
+FODO: sequence, l=1.1;
+    MF0: marker, at=0;
+    QF1h: Quadrupole, K1:=k_q1, L=0.075, AT=0.0375;
+    QD1h: Quadrupole, K1:=-1*k_q1, L=0.075, AT=0.5125;
+    MD: Marker, AT=0.55;
+    QD1h: QD1h, AT=0.5875;
+    QF1h: QF1h, AT=1.0625;
+    MF1: Marker, at=1.1;
+endsequence;
+
+!find periodic starting Twiss for the given layout
+USE, sequence=FODO;
+MATCH, sequence=FODO;
+vary, name=k_q1, step=.00001;
+! vary, name=k_qd1, step=.00001;
+! constraint, range=MD, ALFX=0.0, ALFY=0.0;
+constraint, range=MF0, BETX=1.8, BETY=0.4;
+simplex, calls=1000,  tolerance=1E-13;
+ENDMATCH;
+select,flag=twiss,clear;
+select,flag=twiss;
+twiss, file="fodo_periodic_test_2.tfs";
