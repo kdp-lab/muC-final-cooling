@@ -48,12 +48,19 @@ genericquad QD1 fieldLength=75.0 ironLength=75.0 ironRadius=120.0 apertureRadius
 ##########################################################################################################
 
 place QF1 z=-75 front=1
-for i 0 1 2 3 4
-    # zntuple z=$i*1100 filename=$outfile-b$i.txt
+for i 0 1 2 3 4 5 6 7 8 9
     place QF1 z=$i*1100 front=1
     place QD1 z=475+$i*1100 front=1
     place QD1 z=550+$i*1100 front=1
     place QF1 z=1025+$i*1100 front=1
 endfor
-place QF1 z=5*1100 front=1
-zntuple z=5*1100 filename=$outfile
+place QF1 z=10*1100 front=1
+
+param -unset slice=0  # 1 to composite detections from each cell
+
+if $slice==1
+    zntuple zloop=0:10*1100:550
+    ntuple TestNTuple detectors="Z*" union=1 file=$outfile format=ascii
+else
+    zntuple z=10*1100 filename=$outfile
+endif

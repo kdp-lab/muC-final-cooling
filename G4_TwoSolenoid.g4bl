@@ -34,12 +34,13 @@ beam ascii filename=$beamfile nEvents=$nparticles beamZ=0
 
 ######################### DEFINE SOLENOIDS
 
-param -unset s_length=105.893*2
+param -unset s_length=25
+param -unset f_length=100
 param -unset s_radius=50
-param -unset s_thickness=175
-param -unset s_current=90
+param -unset s_thickness=50
+param -unset s_current=848.353
 param -unset start_offset=200
-param -unset end_point=611.786
+param -unset end_point=2*($start_offset+$f_length)
 
 coil S1_coil innerRadius=$s_radius outerRadius=$s_radius+$s_thickness length=$s_length
 solenoid S1 coilName=S1_coil current=$s_current kill=1
@@ -50,5 +51,6 @@ solenoid S1 coilName=S1_coil current=$s_current kill=1
 ##########################################################################################################
 
 place S1 z=$start_offset front=1
+place S1 z=$start_offset+2*$f_length front=1
 zntuple zloop=0:$end_point:$end_point/40
 ntuple TestNTuple detectors="Z*" union=1 file=$outfile format=ascii

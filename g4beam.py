@@ -117,10 +117,11 @@ def calc_params(x, xp, delta, normalization=1):
     )
 
 
-def calc_all_params(df):
+def calc_all_params(df, include_extra=False):
     """Calculates Courant-Snyder parameters in transverse directions, and emittance in longitudinal direction
 
     :param df: pandas dataframe of particles, parsed from G4Beamline output
+    :param include_extra: if set to true, includes some parameters I didn't think of the first time, namely momentum, z_std, p_std, and N
 
     :return: tuple of x and y parameters, each consisting of (emittance, beta, gamma, alpha, D, D'), and the z-emittance
     """
@@ -149,7 +150,14 @@ def calc_all_params(df):
     )
     z_emit = np.mean(beta) * np.std(z_pos) * np.std(df["Pz"]) / MUON_MASS
 
-    return x_params, y_params, z_emit
+    if include_extra:
+        z_std = C * np.mean(beta) * np.std(df["t"]) * 1e-6
+        p_std = np.std(total_momentum)
+        mean_momentum = np.mean(total_momentum)
+        N = len(df)
+        return x_params, y_params, z_emit, z_std, p_std, mean_momentum, N
+    else:
+        return x_params, y_params, z_emit
 
 
 def p_total(df):
@@ -200,7 +208,7 @@ def print_all_params(df):
 
     :param df: The distribution to summarize
     """
-    x_params, y_params, z_emit = calc_all_params(df)
+    x_params, y_params, z_emit, z_std, p_std, mean_momentum, N = calc_all_params(df, include_extra=True)
     print("-----------------------------")
     print("Twiss parameters for X")
     print(str_params(x_params))
@@ -209,11 +217,10 @@ def print_all_params(df):
     print(str_params(y_params))
     print()
     print("Z-emittance: ", z_emit, "mm")
-    total_momentum = p_total(df)
-    beta = rel_beta(total_momentum)
-    print("Z std:", C * np.mean(beta) * np.std(df["t"]) * 1e-6, "mm")
-    print("p std:", np.std(total_momentum), "MeV/c")
-    print("Mean momentum:", np.mean(total_momentum), "MeV/c")
+    print("Z std:", z_std, "mm")
+    print("p std:", p_std, "MeV/c")
+    print("Mean momentum:", mean_momentum, "MeV/c")
+    print("Particle count:", N)
     print("-----------------------------")
 
 
